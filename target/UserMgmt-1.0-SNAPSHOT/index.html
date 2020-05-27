@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Homepage</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400,400i,500,500i" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i" rel="stylesheet">
+        <link rel="stylesheet" href="css/app.min.css">
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js" crossorigin="anonymous"></script>
+    </head>
+    
+    <body>
+        
+        <div class="fixed">
+            <div class="header">
+                <div class="logo">User.</div>
+                
+                <div class="menu-list">
+                    <a href="#platform"><div>Platform</div></a>
+                    <a href="#overview"><div>Overview</div></a>
+                    <a href="#users"><div>Users</div></a>
+                    <a href="#profile"><div>Profile</div></a>
+                    <div>Developers</div>
+                </div>
+                
+                <div class="logreg">
+                    <a href="register.jsp"><button class="signin-btn" id="sign">Sign In</button></a>
+                    <a href="register.jsp"><button class="signup-btn">Sign Up</button></a>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            const nav = document.querySelector('.header');
+            const topOfNav = nav.offsetTop;
+
+            function fixNav(){
+                if(window.scrollY > topOfNav){
+                    nav.classList.add('fixed-nav');
+                }
+                else{
+                    nav.classList.remove('fixed-nav');
+                }
+            }
+            
+            window.addEventListener('scroll',fixNav);
+        </script>
+        
+        <div class="home">
+            <div class="home-details container" id="platform">
+                <div class="details-content">
+                    <h1 class="details-title">User Management</h1>
+                    <div class="details-subtitle">
+                        We provide the simplest and easiest to use
+                        User interface tools to help administrators manage user identities including password resets,
+                        creating and provisioning, blocking and deleting users.
+                    </div>
+                </div>
+                
+                <div class="home-details-img">
+                    <img src="images/home1.svg" alt="">
+                </div>
+            </div>
+            
+            <div class="home-overview container" id="overview">
+                <div class="overview-details">
+                    <h2 class="title">Overview</h2>
+                    <div class="subtext">
+                        You can easily and quickly connect your apps,
+                        choose identity providers, add users, set up rules, customize your login page
+                        and access analytic from your own dashboard. It really is identity made simple for developers.
+                    </div>
+                </div>
+                
+                <div class="overview-subdetails">
+                    <div class="subdetails-container">
+                        <div class="subdetails-icon blue">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        
+                        <div class="subdetails-text">
+                            <h5 class="subdetails-title">
+                                Any application on any device and any platform
+                            </h5>
+                            <div class="subdetails-subtitle">
+                                Tell us what you want to connect and get a seed project
+                                or customized instructions for connecting an existing app.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subdetails-container">
+                        <div class="subdetails-icon pink">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        
+                        <div class="subdetails-text">
+                            <h5 class="subdetails-title">
+                                Users
+                            </h5>
+                            <div class="subdetails-subtitle">
+                                Add or remove users, modify profile and authorization attributes,
+                                and identify root-cause user login issues in minutes with a simple,
+                                intuitive and powerful web interface.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subdetails-container">
+                        <div class="subdetails-icon orange">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        
+                        <div class="subdetails-text">
+                            <h5 class="subdetails-title">Database</h5>
+                            <div class="subdetails-subtitle">
+                                Store users’ credentials securely in Auth0’s data store or your own.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-overview container" id="users">
+                <div class="overview-details">
+                    <h2 class="title">User</h2>
+                    <div class="subtext">
+                        Add or remove users, modify profile and authorization attributes,
+                        and identify root-cause user login issues in minutes with a simple,
+                        intuitive and powerful web interface.
+                    </div>
+                </div>
+
+                <div class="user-overview-img">
+                    <img src="images/dashboard.PNG" alt="">
+                </div>
+            </div>
+            
+            <div class="profile-overview container" id="profile">
+                <div class="overview-details">
+                    <div class="profile-img">
+                        <img src="images/profile.PNG" alt="">
+                    </div>
+                    
+                    <div class="profile-details">
+                        <h2 class="title">Profile</h2>
+                        <div class="subtext">
+                            Access detailed profile information for each of your users, including
+                            authentication details, devices, login history and locations.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="js/app.min.js"></script>
+    </body>
+</html>
