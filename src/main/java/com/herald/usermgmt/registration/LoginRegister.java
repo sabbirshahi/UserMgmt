@@ -1,7 +1,11 @@
 package com.herald.usermgmt.registration;
 
+import com.herald.usermgmt.historyLog.History;
+import com.herald.usermgmt.historyLog.HistoryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,14 +25,20 @@ public class LoginRegister extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO cd = new UserDAOimpl();
+        HistoryDAO hd = new HistoryDAO();
+        History h = new History();
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
         String name = request.getParameter("name");
         String security_question = request.getParameter("security_question");
         String submitType = request.getParameter("submit");
+        
         User u = cd.getUser(username, password);
         boolean validation = cd.validate(username, password);
+        
+        
 
         HttpSession session = request.getSession();
         if (session != null) {
@@ -41,7 +51,22 @@ public class LoginRegister extends HttpServlet {
                 session.setAttribute("password", password);
                 session.setAttribute("user", u);
                 session.setAttribute("user_type", u.getUser_type());
-
+                
+                if(u.getUser_type().equals("admin")){
+                    User u2 = cd.getUser(username, password);
+                h.setAdmin_id(u2.getId());
+                h.setAdmin_username(u2.getUsername());
+                h.setAction("logged in");
+                hd.insertHistoryAdmin(h);
+                }else{
+                    User u2 = cd.getUser(username, password);
+                h.setClient_id(u2.getId());
+                h.setClient_username(u2.getUsername());
+                h.setAction("logged in");
+                hd.insertHistory(h);
+                }
+                
+                
                 response.sendRedirect("/UserMgmt/HomeServlet");
                 if (session != null) {
                     System.out.println("Session started !");
@@ -56,7 +81,19 @@ public class LoginRegister extends HttpServlet {
                 u.setUsername(username);
                 u.setName(name);
                 u.setSecurity_question(security_question);
+                
+                
+                
                 cd.insertUser(u);
+                //for history log
+                User u2 = cd.getUser(username, password);
+                h.setClient_id(u2.getId());
+                h.setClient_username(u2.getUsername());
+                h.setAction("joined");
+                hd.insertHistory(h);
+                
+                
+
                 request.setAttribute("successMessage", "Hey, " + u.getUsername() + " Registration Done, please login to continue ! ");
                 request.getRequestDispatcher("register.jsp").forward(request, response);
             } else {
@@ -70,6 +107,22 @@ public class LoginRegister extends HttpServlet {
                 u.setName(name);
                 u.setSecurity_question(security_question);
                 cd.insertUser(u);
+                
+                //for history log
+                User client = cd.getUser(username, password);
+                h.setClient_id(client.getId());
+                h.setClient_username(client.getUsername());
+                
+                String admin_username = (String) session.getAttribute("username");
+                String admin_password = (String) session.getAttribute("password");
+                
+                User admin = cd.getUser(admin_username, admin_password);
+                h.setAdmin_id(admin.getId());
+                h.setAdmin_username(admin.getUsername());
+                h.setAction("create");
+                
+                hd.insertHistory(h, admin.getId());
+                
                 request.setAttribute("successMessage", "Hey, " + u.getUsername() + " Registration Done, please login to continue ! ");
                 response.sendRedirect("/UserMgmt/HomeServlet");
             } else {

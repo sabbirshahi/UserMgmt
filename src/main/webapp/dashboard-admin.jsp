@@ -8,6 +8,7 @@
 <%@ page session="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <!doctype html>
 <html lang="en">
@@ -528,7 +529,7 @@
                                                             <td><c:out value="${client.id}" /></td>
                                                             <td><c:out value="${client.username}" /></td>
                                                             <td><c:out value="${client.name}" /></td>
-                                                            <td><c:out value="${client.user_type}" /></td>
+                                                            <td><c:out value="${client.join_date}" /></td>
                                                             <td> <a href="/UserMgmt/block?id=<c:out value='${client.id}'/>"> <button class="block-delete">Block</button></a>
                                                                 <a href="/UserMgmt/delete?id=<c:out value='${client.id}'/>"> <button class="block-delete">Delete</button></a></td>
                                                         </tr>
@@ -538,7 +539,7 @@
                                                             <td><c:out value="${blockClient.id}" /></td>
                                                             <td><c:out value="${blockClient.username}" /></td>
                                                             <td><c:out value="${blockClient.name}" /></td>
-                                                            <td><c:out value="${blockClient.user_type}" /></td>
+                                                            <td><c:out value="${blockClient.join_date}" /></td>
                                                             <td> <a href="/UserMgmt/unblock?id=<c:out value='${blockClient.id}'/>"> <button class="block-delete">Unblock</button></a>
                                                                 <a href="/UserMgmt/delete?id=<c:out value='${blockClient.id}'/>"> <button class="block-delete">Delete</button></a></td>
                                                         </tr>
@@ -548,7 +549,7 @@
                                                             <td><c:out value="${admin.id}" /></td>
                                                             <td><c:out value="${admin.username}" /></td>
                                                             <td><c:out value="${admin.name}" /></td>
-                                                            <td><c:out value="${admin.user_type}" /></td>
+                                                            <td><c:out value="${admin.join_date}" /></td>
                                                             <td>Options unavailable for admins</td>
                                                         </tr>
                                                     </c:forEach>
@@ -572,7 +573,7 @@
                                                             <td><c:out value="${client.id}" /></td>
                                                             <td><c:out value="${client.username}" /></td>
                                                             <td><c:out value="${client.name}" /></td>
-                                                            <td><c:out value="${client.user_type}" /></td>
+                                                            <td><c:out value="${client.join_date}" /></td>
                                                             <td> <a href="/UserMgmt/block?id=<c:out value='${client.id}'/>"> <button class="block-delete">Block</button></a>
                                                                 <a href="/UserMgmt/delete?id=<c:out value='${client.id}'/>"> <button class="block-delete">Delete</button></a></td>
                                                         </tr>
@@ -597,7 +598,7 @@
                                                             <td><c:out value="${admin.id}" /></td>
                                                             <td><c:out value="${admin.username}" /></td>
                                                             <td><c:out value="${admin.name}" /></td>
-                                                            <td><c:out value="${admin.user_type}" /></td>
+                                                            <td><c:out value="${admin.join_date}" /></td>
                                                             <td>Options unavailable for admins</td>
                                                         </tr>
                                                     </c:forEach>
@@ -623,7 +624,7 @@
                                                             <td><c:out value="${blockClient.id}" /></td>
                                                             <td><c:out value="${blockClient.username}" /></td>
                                                             <td><c:out value="${blockClient.name}" /></td>
-                                                            <td><c:out value="${blockClient.user_type}" /></td>
+                                                            <td><c:out value="${blockClient.join_date}" /></td>
                                                             <td> <a href="/UserMgmt/unblock?id=<c:out value='${blockClient.id}'/>"> <button class="block-delete">Unblock</button></a>
                                                                 <a href="/UserMgmt/delete?id=<c:out value='${blockClient.id}'/>"> <button class="block-delete">Delete</button></a></td>
                                                         </tr>
@@ -657,32 +658,95 @@
 
 
 
+
+
                                     <div class="history-container col-lg-12">
-                                        <div class="log-container">
-                                            <div class="log-date">Today</div>
-                                            <div class="log-content">
-                                                <div class="log-details">
-                                                    <div><a href="">Sishir</a> deleted User <a href="">John Doe</a></div>
-                                                    <div class="log-details-datetime">4/12/2020 4:12</div>
+
+                                        <c:forEach var="listDate" items="${listDate}" >
+                                            <jsp:useBean id="now" class="java.util.Date"/>    
+
+                                            <p style="color:white;">
+                                                <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="currenttime"/>
+                                            </p>
+
+
+
+
+                                            <div class="log-container">
+                                                <div class="log-date">  <c:if test="${listDate.date == currenttime}">Today</c:if>  <c:if test="${listDate.date != currenttime}"><c:out value="${listDate.date}"/></c:if> 
+                                                    </div>
+                                                    <div class="log-content">
+                                                    <c:forEach var="listHistory" items="${listHistory}" >
+                                                        <c:if test="${listDate.date == listHistory.date}">
+                                                            <div class="log-details">
+
+                                                                <c:if test="${listHistory.action =='logged in'}">
+                                                                    <c:if test="${listHistory.client_username == 'null'}">    
+
+                                                                        <div><a href="">${listHistory.admin_username} </a> logged in. </div>
+                                                                    </c:if>
+                                                                    <c:if test="${listHistory.admin_username == 'null'}">    
+
+                                                                        <div><a href="">${listHistory.client_username} </a> logged in. </div>
+                                                                    </c:if>
+                                                                </c:if>
+                                                                <c:if test="${listHistory.action =='logged of'}">
+                                                                    <c:if test="${listHistory.client_username == 'null'}">    
+
+                                                                        <div><a href="">${listHistory.admin_username} </a> logged off. </div>
+                                                                    </c:if>
+                                                                    <c:if test="${listHistory.admin_username == 'null'}">    
+
+                                                                        <div><a href="">${listHistory.client_username} </a> logged off. </div>
+                                                                    </c:if>
+                                                                </c:if>
+
+                                                                <c:if test="${listHistory.action =='joined'}">
+                                                                    <div><a href="">${listHistory.client_username}</a> joined our family </div>
+                                                                </c:if>
+                                                                <c:if test="${listHistory.action =='create'}">
+                                                                    <div><a href="">${listHistory.admin_username}</a> created<a href=""> ${listHistory.client_username} </a></div>
+                                                                </c:if>
+                                                                <c:if test="${listHistory.action =='blocked'}">
+                                                                    <div><a href="">${listHistory.admin_username}</a> blocked<a href=""> ${listHistory.client_username} </a></div>
+                                                                </c:if>
+                                                                <c:if test="${listHistory.action =='unblocked'}">
+                                                                    <div><a href="">${listHistory.admin_username}</a> unblocked<a href=""> ${listHistory.client_username} </a></div>
+                                                                </c:if>
+
+                                                                <c:if test="${listHistory.action =='delete'}">
+                                                                    <div><a href="">${listHistory.admin_username}</a> deleted<a href=""> ${listHistory.client_username} </a></div>
+                                                                </c:if>
+
+                                                                <div class="log-details-datetime">${listHistory.time}</div>
+                                                            </div>
+                                                        </c:if>
+                                                    </c:forEach>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </c:forEach>
 
-                                        <div class="log-container">
-                                            <div class="log-date">Yesterday</div>
-                                            <div class="log-content">
-                                                <div class="log-details">
-                                                    <div><a href="">Sishir</a> blocked User <a href="">John Doe</a></div>
-                                                    <div class="log-details-datetime">4/12/2020 4:12</div>
-                                                </div>
-                                                <div class="log-details">
-                                                    <div><a href="">Sishir</a> created User <a href="">John Doe</a></div>
-                                                    <div class="log-details-datetime">4/12/2020 4:12</div>
+                                        <%--<c:forEach var="listDate" items="${listDate}" varStatus="loop">--%>
+                                        <%--<c:out value="${listDate.date}"/>--%>
 
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <%--</c:forEach>--%>
+
+                                        <!--                                        <div class="log-container">
+                                                                                    <div class="log-date">Yesterday</div>
+                                                                                    <div class="log-content">
+                                                                                        <div class="log-details">
+                                                                                            <div><a href="">Sishir</a> blocked User <a href="">John Doe</a></div>
+                                                                                            <div class="log-details-datetime">4/12/2020 4:12</div>
+                                                                                        </div>
+                                                                                        <div class="log-details">
+                                                                                            <div><a href="">Sishir</a> created User <a href="">John Doe</a></div>
+                                                                                            <div class="log-details-datetime">4/12/2020 4:12</div>
+                                        
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>-->
                                     </div>
+
 
                                 </div>
                             </div>

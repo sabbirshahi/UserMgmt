@@ -15,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserDAOimpl implements UserDAO {
@@ -28,13 +30,14 @@ public class UserDAOimpl implements UserDAO {
         int status = 0;
         try {
             con = MySqlCon.getConnection();
-            ps = con.prepareStatement("insert into user (username, password, name, user_type, security_question, image) values(?,?,?,?,?,?)");
+            ps = con.prepareStatement("insert into user (username, password, name, user_type, security_question, image, join_date) values(?,?,?,?,?,?,?)");
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getName());
             ps.setString(4, "client");
             ps.setString(5, u.getSecurity_question());
-             ps.setString(6, "default");
+            ps.setString(6, "default");
+            ps.setObject(7, LocalDate.now());
             status = ps.executeUpdate();
             con.close();
         } catch (Exception e) {
@@ -62,8 +65,9 @@ public class UserDAOimpl implements UserDAO {
                 String user_type = resultSet.getString("user_type");
                 String security_question = resultSet.getString("security_question");
                 String image = resultSet.getString("image").trim();
+                Object join_date = resultSet.getObject("join_date");
 
-                User users = new User(user_id, username, password, name, user_type, security_question, image);
+                User users = new User(user_id, username, password, name, user_type, security_question, image, join_date);
                 return users;
             }
         } catch (Exception e) {
@@ -80,8 +84,7 @@ public class UserDAOimpl implements UserDAO {
         try {
             con = MySqlCon.getConnection();
             ps = con.prepareStatement("select * from user where user_id = ?");
-            ps.setInt(1,id);
-     
+            ps.setInt(1, id);
 
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
@@ -92,8 +95,8 @@ public class UserDAOimpl implements UserDAO {
                 String user_type = resultSet.getString("user_type");
                 String security_question = resultSet.getString("security_question");
                 String image = resultSet.getString("image").trim();
-
-                User users = new User(user_id, username, password, name, user_type, security_question, image);
+                Object join_date = resultSet.getObject("join_date");
+                User users = new User(user_id, username, password, name, user_type, security_question, image, join_date);
                 return users;
             }
         } catch (Exception e) {
@@ -131,7 +134,8 @@ public class UserDAOimpl implements UserDAO {
         }
         return status;
     }
-  @Override
+
+    @Override
     public int validateForgot(String name, String security) {
         int user_id = 0;
         User u = new User();
@@ -147,18 +151,16 @@ public class UserDAOimpl implements UserDAO {
             ResultSet rs = ps.executeQuery();
 //            status = rs.next();
 
-           
-                 while (rs.next()) {
-            user_id = rs.getInt("user_id");
-        }
-              
+            while (rs.next()) {
+                user_id = rs.getInt("user_id");
+            }
 
         } catch (Exception e) {
             System.out.println(e);
         }
         return user_id;
     }
-    
+
     @Override
     public List<User> listClient() throws SQLException {
         List<User> listClient = new ArrayList<>();
@@ -178,8 +180,8 @@ public class UserDAOimpl implements UserDAO {
             String name = resultSet.getString("name");
             String user_type = resultSet.getString("user_type");
             String image = resultSet.getString("image");
-
-            User user = new User(id, username, name, user_type, image);
+            Object join_date = resultSet.getObject("join_date");
+            User user = new User(id, username, name, user_type, image, join_date);
             listClient.add(user);
         }
 
@@ -187,8 +189,7 @@ public class UserDAOimpl implements UserDAO {
         return listClient;
     }
 
-    
-        @Override
+    @Override
     public List<User> listAdmin() throws SQLException {
         List<User> listAdmin = new ArrayList<>();
         String client = "admin";
@@ -207,8 +208,8 @@ public class UserDAOimpl implements UserDAO {
             String name = resultSet.getString("name");
             String user_type = resultSet.getString("user_type");
             String image = resultSet.getString("image");
-
-            User user = new User(id, username, name, user_type, image);
+            Object join_date = resultSet.getObject("join_date");
+            User user = new User(id, username, name, user_type, image, join_date);
             listAdmin.add(user);
         }
 
@@ -234,7 +235,8 @@ public class UserDAOimpl implements UserDAO {
         con.close();
         return totalclient;
     }
-        @Override
+
+    @Override
     public int totalAdmin() throws SQLException {
         int totaladmin = 0;
         String client = "admin";
@@ -252,64 +254,70 @@ public class UserDAOimpl implements UserDAO {
         con.close();
         return totaladmin;
     }
- @Override
-    public boolean editUser(int id, User u){  
-        boolean rowUpdated = true;  
-        try{  
-             String sql = "UPDATE `user` SET `username`=?,`password`=?,`name`=?,`security_question`=? WHERE user_id= ?; ";
-             con = MySqlCon.getConnection(); 
-                Statement s = con.createStatement();
-                ps = con.prepareStatement(sql);
-                
-                 ps.setString(1, u.getUsername());
+
+    @Override
+    public boolean editUser(int id, User u) {
+        boolean rowUpdated = true;
+        try {
+            String sql = "UPDATE `user` SET `username`=?,`password`=?,`name`=?,`security_question`=? WHERE user_id= ?; ";
+            con = MySqlCon.getConnection();
+            Statement s = con.createStatement();
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getName());
 
             ps.setString(4, u.getSecurity_question());
-             ps.setInt(5, id);
-        rowUpdated = ps.executeUpdate() > 0;   
-               
-            
+            ps.setInt(5, id);
+            rowUpdated = ps.executeUpdate() > 0;
+
             con.close();
-        }catch(Exception e){e.printStackTrace();}  
-          
-        return rowUpdated;  
-    } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rowUpdated;
+    }
+
     @Override
-    public int deleteUser(int id){  
-        int status=0;  
-        try{  
-             con = MySqlCon.getConnection(); 
-                Statement s = con.createStatement();
-                String s1 ="delete from user where user_id="+id;
-                String s2 = "DELETE FROM block WHERE user_id ="+id;  
-                s.addBatch(s1);
-                s.addBatch(s2);     
-               s.executeBatch();
-            
+    public int deleteUser(int id) {
+        int status = 0;
+        try {
+            con = MySqlCon.getConnection();
+            Statement s = con.createStatement();
+            String s1 = "delete from user where user_id=" + id;
+            String s2 = "DELETE FROM block WHERE user_id =" + id;
+            s.addBatch(s1);
+            s.addBatch(s2);
+            s.executeBatch();
+
             con.close();
-        }catch(Exception e){e.printStackTrace();}  
-          
-        return status;  
-    }  
-  @Override
-    public boolean resetPassword(int id, User u){  
-        boolean rowUpdated = true;  
-        try{  
-             String sql = "UPDATE `user` SET `password`=? WHERE user_id= ?; ";
-             con = MySqlCon.getConnection(); 
-                Statement s = con.createStatement();
-                ps = con.prepareStatement(sql);
-                
-  
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return status;
+    }
+
+    @Override
+    public boolean resetPassword(int id, User u) {
+        boolean rowUpdated = true;
+        try {
+            String sql = "UPDATE `user` SET `password`=? WHERE user_id= ?; ";
+            con = MySqlCon.getConnection();
+            Statement s = con.createStatement();
+            ps = con.prepareStatement(sql);
+
             ps.setString(1, u.getPassword());
-             ps.setInt(2, id);
-        rowUpdated = ps.executeUpdate() > 0;   
-               
-            
+            ps.setInt(2, id);
+            rowUpdated = ps.executeUpdate() > 0;
+
             con.close();
-        }catch(Exception e){e.printStackTrace();}  
-          
-        return rowUpdated;  
-    } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rowUpdated;
+    }
 }

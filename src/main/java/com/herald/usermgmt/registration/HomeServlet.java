@@ -7,6 +7,8 @@ package com.herald.usermgmt.registration;
 
 import com.herald.usermgmt.block.Block;
 import com.herald.usermgmt.block.BlockDAO;
+import com.herald.usermgmt.historyLog.History;
+import com.herald.usermgmt.historyLog.HistoryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -66,6 +68,7 @@ public class HomeServlet extends HttpServlet {
             request.setAttribute("name", u2.getName());
             request.setAttribute("user_type", u2.getUser_type());
             request.setAttribute("user_id", u2.getId());
+            request.setAttribute("join_date", u2.getJoin_date());
             System.out.println(u2.getUsername() + " --updated username");
             System.out.print(u2.getImage() + " ---image url demo");
             request.setAttribute("image", u2.getImage().trim().trim());
@@ -79,6 +82,11 @@ public class HomeServlet extends HttpServlet {
                     listClient(request, response);
                     totalUser(request, response);
                     totalBlockClient(request, response);
+                    
+                    HistoryDAO historyDA03 = new HistoryDAO();
+        List<History> listClientDate = historyDA03.listClientDate(sessionUsername);
+        request.setAttribute("listClientDate", listClientDate);
+        
                     RequestDispatcher dispatcher = request.getRequestDispatcher("dashboard-client.jsp");
                     dispatcher.forward(request, response);
 
@@ -95,6 +103,7 @@ public class HomeServlet extends HttpServlet {
                 try {
 
                     listClient(request, response);
+            
                     totalUser(request, response);
                     totalBlockClient(request, response);
                     RequestDispatcher dispatcher = request.getRequestDispatcher("dashboard-admin.jsp");
@@ -128,9 +137,19 @@ public class HomeServlet extends HttpServlet {
         BlockDAO blockDAO = new BlockDAO();
         List<Block> listBlockClient = blockDAO.listBlockClient();
         request.setAttribute("listBlockClient", listBlockClient);
+        
+        HistoryDAO historyDA0 = new HistoryDAO();
+        List<History> listHistory = historyDA0.listHistory();
+        request.setAttribute("listHistory", listHistory);
+        
+        HistoryDAO historyDA02 = new HistoryDAO();
+        List<History> listDate = historyDA0.listDate();
+        request.setAttribute("listDate", listDate);
 
     }
 
+    
+    
     private void totalUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         UserDAO userDAO = new UserDAOimpl();
 

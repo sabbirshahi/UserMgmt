@@ -81,8 +81,8 @@ public class BlockDAO {
             String username = resultSet.getString("username");
             String name = resultSet.getString("name");
             String user_type = resultSet.getString("user_type");
-
-            Block blockUser = new Block(id, username, name, user_type);
+            Object join_date = resultSet.getObject("join_date");
+            Block blockUser = new Block(id, username, name, user_type, join_date);
             listBlockClient.add(blockUser);
         }
 

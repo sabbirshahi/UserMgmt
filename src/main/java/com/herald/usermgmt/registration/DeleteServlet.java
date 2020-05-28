@@ -9,6 +9,8 @@ package com.herald.usermgmt.registration;
  *
  * @author Shahi
  */
+import com.herald.usermgmt.historyLog.History;
+import com.herald.usermgmt.historyLog.HistoryDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +24,8 @@ import javax.servlet.http.HttpSession;
 public class DeleteServlet extends HttpServlet {
 
     UserDAO cd = new UserDAOimpl();
+    HistoryDAO hd = new HistoryDAO();
+        History h = new History();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -32,13 +36,30 @@ public class DeleteServlet extends HttpServlet {
         String sessionUserType = (String) session.getAttribute("user_type");
         if (session != null) {
             if (sessionUserType.equals("admin")) {
+                
                 String sid = request.getParameter("id");
                 int id = Integer.parseInt(sid);
+                
+                //for history log
+                User client = cd.getUser(id);
+                h.setClient_id(client.getId());
+                h.setClient_username(client.getUsername());
+                
+                String admin_username = (String) session.getAttribute("username");
+                String admin_password = (String) session.getAttribute("password");
+                
+                User admin = cd.getUser(admin_username, admin_password);
+                h.setAdmin_id(admin.getId());
+                h.setAdmin_username(admin.getUsername());
+                h.setAction("delete");
+                
+                hd.insertHistory(h, admin.getId());
+                
                 cd.deleteUser(id);
                 response.sendRedirect("HomeServlet");
             } else {
                 System.out.println("You donot have this Permission");
-                request.setAttribute("editerror", "You do not have this permission");
+                request.setAttribute("permission", "You do not have this permission");
                 request.getRequestDispatcher("HomeServlet").include(request, response);
             }
         } else {

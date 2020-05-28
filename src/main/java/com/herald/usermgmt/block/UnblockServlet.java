@@ -9,6 +9,9 @@ package com.herald.usermgmt.block;
  *
  * @author Shahi
  */
+import com.herald.usermgmt.historyLog.History;
+import com.herald.usermgmt.historyLog.HistoryDAO;
+import com.herald.usermgmt.registration.User;
 import com.herald.usermgmt.registration.UserDAO;
 import com.herald.usermgmt.registration.UserDAOimpl;
 import java.io.IOException;
@@ -25,6 +28,8 @@ public class UnblockServlet extends HttpServlet {
 
     UserDAO cd = new UserDAOimpl();
     BlockDAO bd = new BlockDAO();
+     HistoryDAO hd = new HistoryDAO();
+        History h = new History();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,10 +43,24 @@ public class UnblockServlet extends HttpServlet {
                 String sid = request.getParameter("id");
                 int id = Integer.parseInt(sid);
                 bd.unblockClient(id);
+                //for history log
+                User client = cd.getUser(id);
+                h.setClient_id(client.getId());
+                h.setClient_username(client.getUsername());
+                
+                String admin_username = (String) session.getAttribute("username");
+                String admin_password = (String) session.getAttribute("password");
+                
+                User admin = cd.getUser(admin_username, admin_password);
+                h.setAdmin_id(admin.getId());
+                h.setAdmin_username(admin.getUsername());
+                h.setAction("unblocked");
+                
+                hd.insertHistory(h, admin.getId());
                 response.sendRedirect("HomeServlet");
             } else {
                 System.out.println("You donot have this Permission");
-                request.setAttribute("editerror", "You do not have this permission");
+                request.setAttribute("permission", "You do not have this permission");
                 request.getRequestDispatcher("HomeServlet").include(request, response);
             }
         } else {

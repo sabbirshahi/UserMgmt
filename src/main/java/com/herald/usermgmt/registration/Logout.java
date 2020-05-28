@@ -5,6 +5,8 @@
  */
 package com.herald.usermgmt.registration;
 
+import com.herald.usermgmt.historyLog.History;
+import com.herald.usermgmt.historyLog.HistoryDAO;
 import java.io.IOException;  
 import java.io.PrintWriter;  
   
@@ -18,6 +20,9 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/Logout")
 
 public class Logout extends HttpServlet {  
+    UserDAO cd = new UserDAOimpl();
+     HistoryDAO hd = new HistoryDAO();
+        History h = new History();
         protected void doGet(HttpServletRequest request, HttpServletResponse response)  
                                 throws ServletException, IOException {   
                 response.setContentType("text/html");  
@@ -25,7 +30,24 @@ public class Logout extends HttpServlet {
               
             request.getRequestDispatcher("register.jsp").include(request, response);  
               
-            HttpSession session=request.getSession();  
+            HttpSession session=request.getSession(); 
+            String sessionUsername = (String) session.getAttribute("username");
+            String sessionPassword = (String) session.getAttribute("password");
+           
+            User u = cd.getUser(sessionUsername, sessionPassword);
+            if(u.getUser_type().equals("admin")){
+                h.setAdmin_id(u.getId());
+                h.setAdmin_username(u.getUsername());
+                h.setAction("logged of");
+                hd.insertHistoryAdmin(h);
+            }else{
+                h.setClient_id(u.getId());
+                h.setClient_username(u.getUsername());
+                h.setAction("logged of");
+                hd.insertHistory(h);
+            }
+            
+            
             session.invalidate();  
 
               
