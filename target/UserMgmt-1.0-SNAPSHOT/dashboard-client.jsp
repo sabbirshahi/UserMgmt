@@ -393,7 +393,7 @@
                                                     <div class="log-content">
 
                                                     <c:forEach var="listHistory" items="${listHistory}" >
-                                                        <c:if test="${listHistory.client_username == username}">
+                                                        <c:if test="${listHistory.user_id == user_id}">
                                                             <c:if test="${listClientDate.date == listHistory.date}">
                                                                 <div class="log-details">
 
@@ -401,37 +401,36 @@
 
 
 
-                                                                        <c:if test="${listHistory.admin_username == 'null'}">    
 
-                                                                            <div><a href="">${listHistory.client_username} </a> logged in. </div>
-                                                                        </c:if>
+                                                                            <div><a href="">${listHistory.username} </a> logged in. </div>
+                                                                        
                                                                     </c:if>
 
-                                                                    <c:if test="${listHistory.action =='logged of'}">
+                                                                    <c:if test="${listHistory.action =='logged off'}">
 
-                                                                        <c:if test="${listHistory.admin_username == 'null'}">    
+                                                                        
 
-                                                                            <div><a href="">${listHistory.client_username} </a> logged off. </div>
-                                                                        </c:if>
+                                                                            <div><a href="">${listHistory.username} </a> logged off. </div>
+                                                                   
                                                                     </c:if>
 
                                                                     <c:if test="${listHistory.action =='joined'}">
-                                                                        <div><a href="">${listHistory.client_username}</a> joined our family </div>
+                                                                        <div><a href="">${listHistory.username}</a> joined our family </div>
                                                                     </c:if>
 
                                                                     <c:if test="${listHistory.action =='create'}">
-                                                                        <c:if test="${listHistory.client_username == username}">
-                                                                            <div><a href="">${listHistory.admin_username}</a> created<a href=""> ${listHistory.client_username} </a></div>
+                                                                        <c:if test="${listHistory.user_id == user_id}">
+                                                                            <div><a href="">${listHistory.username}</a> joined our family</div>
                                                                         </c:if>
                                                                     </c:if>
                                                                     <c:if test="${listHistory.action =='blocked'}">
-                                                                        <c:if test="${listHistory.client_username == username}">
-                                                                            <div><a href="">${listHistory.admin_username}</a> blocked<a href=""> ${listHistory.client_username} </a></div>
+                                                                        <c:if test="${listHistory.user_id == user_id}">
+                                                                            <div><a href="">${listHistory.username}</a> got blocked</div>
                                                                         </c:if>
                                                                     </c:if>
                                                                     <c:if test="${listHistory.action =='unblocked'}">
-                                                                        <c:if test="${listHistory.client_username == username}">
-                                                                            <div><a href="">${listHistory.admin_username}</a> unblocked<a href=""> ${listHistory.client_username} </a></div>
+                                                                        <c:if test="${listHistory.user_id == user_id}">
+                                                                            <div><a href="">${listHistory.username}</a> got unblocked</div>
                                                                         </c:if>
                                                                     </c:if>
 

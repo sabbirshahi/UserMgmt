@@ -11,16 +11,16 @@
     </head>
     <body>
        
-        <h1>Hi, ${FILES_DIR_FILE}${imagePath} !!! We welcome you !!!</h1>
+    <c:forEach var="create" items="${reportCreateList}">
+                                            <tr>
+                                                <td><c:out value="${create.action}" /></td>
+                                                <td><c:out value="${create.username}" /></td>
+                                                <td>Demo Bahadur</td>
+                                                <td>4/11/2020</td>
+                                                <td><button class="block-delete">Block</button> <button class="block-delete">Delete</button></td>
+                                            </tr>
+                                            </c:forEach>
 
-        <img src="uploadimage?fileName=${not empty marginLeft ? 'margin-left:'.concat(marginLeft) :demo}" height="100px" width="100px" onerror="this.src='https://i.stack.imgur.com/l60Hf.png';">
-        <img src="${FILES_DIR_FILE}${imagePath}" height="100px" width="100px">
- 
-<form action="uploadimage" method="post" enctype="multipart/form-data">
-Select File to Upload:<input type="file" name="fileName">
-<br>
-<input type="submit" value="Upload">
-</form>
 
         <a href="Logout">Logout</a>
         

@@ -676,49 +676,49 @@
                                                 <div class="log-date">  <c:if test="${listDate.date == currenttime}">Today</c:if>  <c:if test="${listDate.date != currenttime}"><c:out value="${listDate.date}"/></c:if> 
                                                     </div>
                                                     <div class="log-content">
-                                                    <c:forEach var="listHistory" items="${listHistory}" >
-                                                        <c:if test="${listDate.date == listHistory.date}">
+                                                    <c:forEach var="listUserHistory" items="${listHistory}" >
+                                                        <c:if test="${listDate.date == listUserHistory.date}">
                                                             <div class="log-details">
 
-                                                                <c:if test="${listHistory.action =='logged in'}">
-                                                                    <c:if test="${listHistory.client_username == 'null'}">    
+                                                                <c:if test="${listUserHistory.action =='logged in'}">
 
-                                                                        <div><a href="">${listHistory.admin_username} </a> logged in. </div>
-                                                                    </c:if>
-                                                                    <c:if test="${listHistory.admin_username == 'null'}">    
 
-                                                                        <div><a href="">${listHistory.client_username} </a> logged in. </div>
-                                                                    </c:if>
+                                                                    <div><a href="">${listUserHistory.username} </a> logged in. </div>
+
                                                                 </c:if>
-                                                                <c:if test="${listHistory.action =='logged of'}">
-                                                                    <c:if test="${listHistory.client_username == 'null'}">    
+                                                                <c:if test="${listUserHistory.action =='logged off'}">
 
-                                                                        <div><a href="">${listHistory.admin_username} </a> logged off. </div>
-                                                                    </c:if>
-                                                                    <c:if test="${listHistory.admin_username == 'null'}">    
 
-                                                                        <div><a href="">${listHistory.client_username} </a> logged off. </div>
-                                                                    </c:if>
+                                                                    <div><a href="">${listUserHistory.username} </a> logged off. </div>
+
                                                                 </c:if>
 
-                                                                <c:if test="${listHistory.action =='joined'}">
-                                                                    <div><a href="">${listHistory.client_username}</a> joined our family </div>
-                                                                </c:if>
-                                                                <c:if test="${listHistory.action =='create'}">
-                                                                    <div><a href="">${listHistory.admin_username}</a> created<a href=""> ${listHistory.client_username} </a></div>
-                                                                </c:if>
-                                                                <c:if test="${listHistory.action =='blocked'}">
-                                                                    <div><a href="">${listHistory.admin_username}</a> blocked<a href=""> ${listHistory.client_username} </a></div>
-                                                                </c:if>
-                                                                <c:if test="${listHistory.action =='unblocked'}">
-                                                                    <div><a href="">${listHistory.admin_username}</a> unblocked<a href=""> ${listHistory.client_username} </a></div>
-                                                                </c:if>
+                                                                <c:if test="${listUserHistory.action =='blocked'}">
 
-                                                                <c:if test="${listHistory.action =='delete'}">
-                                                                    <div><a href="">${listHistory.admin_username}</a> deleted<a href=""> ${listHistory.client_username} </a></div>
-                                                                </c:if>
 
-                                                                <div class="log-details-datetime">${listHistory.time}</div>
+                                                                    <div><a href="">${listUserHistory.username} </a> got blocked. </div>
+
+                                                                </c:if>    
+
+                                                                <c:if test="${listUserHistory.action =='unblocked'}">
+
+
+                                                                    <div><a href="">${listUserHistory.username} </a> got unblocked. </div>
+
+                                                                </c:if>         
+                                                                <c:if test="${listUserHistory.action =='delete'}">
+
+
+                                                                    <div><a href="">${listUserHistory.username} </a> got deleted. </div>
+
+                                                                </c:if> 
+                                                                <c:if test="${listUserHistory.action =='joined'}">
+
+
+                                                                    <div><a href="">${listUserHistory.username} </a> joined our family. </div>
+
+                                                                </c:if> 
+                                                                <div class="log-details-datetime">${listUserHistory.time}</div>
                                                             </div>
                                                         </c:if>
                                                     </c:forEach>
@@ -752,8 +752,124 @@
                             </div>
 
                         </div>
-                        <div class="tab-pane fade" id="report" role="tabpanel"></div>
+                        <div class="tab-pane fade" id="report" role="tabpanel">
 
+
+                    <div class="container userlist">
+                        <div class="row">
+
+
+                            <div class="dashboard-title col-lg-12">Report</div>
+
+
+                                <form action="ReportServlet" method="post" class="date-form">
+                                    <label for="date">Show result from date:    </label>
+                                    <input type="date" id="maxdate" name="startdate" value="${minDate}"
+                                           min="${minDate}" max="${maxDate}">
+                                    <label for="date">To:    </label>
+                                    <input type="date" id="enddate" name="enddate" value="${maxDate}"
+                                           min="${minDate}" max="${maxDate}">
+
+
+                                    <input type="submit" name="submit" value="submit" class="create-btn"/>
+                                </form>
+
+
+
+
+
+
+
+                            <div class="upload-container">
+                                <div class="container upload">
+
+
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item ">
+                                            <a href="#5" class="active nav-link" data-toggle="tab">
+                                                <h3 class="upload-title">Created Users</h3>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#6" class="nav-link" data-toggle="tab">
+                                                <h3 class="upload-title">Blocked Users</h3>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content clearfix">
+
+                                    <div class="tab-pane active upload-content" id="5">
+
+                                        <table class="all_users">
+                                            <thead class="table-heading">
+                                            <tr>
+                                                <th>Client_id</th>
+                                                <th>Username</th>
+                                                <th>Status</th>
+                                                <th>Join Date</th>
+                                                <th>Time</th>
+                                            </tr>
+                                            </thead>
+                                          
+                                            <c:forEach var="create" items="${reportCreateList}">
+                                            <tr>
+                                                <td><c:out value="${create.user_id}" /></td>
+                                                <td><c:out value="${create.username}" /></td>
+                                                <td><c:out value="${create.action}" /></td>
+                                                <td><c:out value="${create.date}" /></td>
+                                                                                                <td><c:out value="${create.time}" /></td>
+                                              
+                                            </tr>
+                                            </c:forEach>
+                                            
+                                           
+                                        </table>
+                                    </div>
+
+                                 
+                                    <div class="tab-pane upload-content" id="6">
+                                        <table class="all_users">
+                                            <thead class="table-heading">
+                                            <tr>
+                                                <th>Client_id</th>
+                                                <th>Username</th>
+                                                <th>Status</th>
+                                                <th>Blocked Date</th>
+                                                <th>Blocked time</th>
+                                               
+                                            </tr>
+                                            </thead>
+                                             <c:forEach var="block" items="${reportBlockList}">
+                                            <tr>
+                                                <td><c:out value="${block.user_id}" /></td>
+                                                <td><c:out value="${block.username}" /></td>
+                                                <td><c:out value="${block.action}" /></td>
+                                                <td><c:out value="${block.date}" /></td>
+                                                <td><c:out value="${block.time}" /></td>
+                                            </tr>
+                                            </c:forEach>
+                                           
+
+
+
+                                        </table>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
 
                     </div>
                 </div>
